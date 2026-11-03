@@ -793,7 +793,10 @@ impl WitPackageDecoder<'_> {
                                     self.register_defined(id, &self.types[ty])?;
                                 }
                                 ComponentAnyTypeId::Resource(_) => {}
-                                _ => unreachable!(),
+                                _ => bail!(
+                                    "cannot represent this component in WIT: type `{name}` is a \
+                                     component, instance or function type"
+                                ),
                             }
                             // Imports sharing an instance type see the same
                             // `created` again, which is fine if it's for the
@@ -1082,7 +1085,10 @@ impl WitPackageDecoder<'_> {
                         .convert_defined(&self.types[ty])
                         .context("failed to convert unaliased type")?,
                     ComponentAnyTypeId::Resource(_) => TypeDefKind::Resource,
-                    _ => unreachable!(),
+                    _ => bail!(
+                        "cannot represent this component in WIT: type `{name}` is a component, \
+                         instance or function type"
+                    ),
                 }
             }
         };
