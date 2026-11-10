@@ -3,9 +3,13 @@
 (component
   (type $pkg (component
     (type $w (component
-      (type $l (list u32))
-      (import "f" (func (param "x" $l)))
-      (import "a:x/k" (instance (export "x" (type (eq $l)))))
+      (import "r" (type $r (sub resource)))
+      (type $o (own $r))
+      (import "f" (func (param "x" $o)))
+      (import "a:x/k" (instance
+        (alias outer $w $o (type $o2))
+        (export "x" (type (eq $o2)))
+      ))
     ))
     (export "root:component/root" (component (type $w)))
   ))
