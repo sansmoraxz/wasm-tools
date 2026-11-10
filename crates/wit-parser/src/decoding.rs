@@ -1809,6 +1809,11 @@ impl WitPackageDecoder<'_> {
         }
 
         let id = self.insert_package(package)?;
+        for (name, world) in self.resolve.packages[id].worlds.iter() {
+            self.resolve.check_world_exports(*world).map_err(|e| {
+                anyhow!("cannot represent this component in WIT: world `{name}`: {e}")
+            })?;
+        }
         assert!(self.resolve.worlds.iter().all(|(_, w)| w.package.is_some()));
         assert!(
             self.resolve
